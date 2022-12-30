@@ -16,21 +16,26 @@ class Artist(base):
     Name = Column(String)
 
 
+# create a class-based model for the "Album" table
 class Album(base):
     __tablename__ = "Album"
     AlbumId = Column(Integer, primary_key=True)
     Title = Column(String)
-    ArtistId = Column(Integer, ForeignKey(Artist.ArtistId))
+    ArtistId = Column(Integer, ForeignKey("Artist.ArtistId"))
 
 
+# create a class-based model for the "Track" table
 class Track(base):
     __tablename__ = "Track"
     TrackId = Column(Integer, primary_key=True)
     Name = Column(String)
-    AlbumId = Column(Integer, ForeignKey(Album.AlbumId))
+    AlbumId = Column(Integer, ForeignKey("Album.AlbumId"))
     MediaTypeId = Column(Integer, primary_key=False)
     GenreId = Column(Integer, primary_key=False)
-    Compose = Column(String)
+    Composer = Column(String)
+    Milliseconds = Column(Integer, primary_key=False)
+    Bytes = Column(Integer, primary_key=False)
+    UnitPrice = Column(Float)
 
 
 # instead of connecting to the database directly, we will ask for a session
@@ -41,3 +46,26 @@ session = Session()
 
 # creating the database using declarative_base subclass
 base.metadata.create_all(db)
+
+# Query 1 - select all records from the "Artist" table
+# artists = session.query(Artist)
+# for artist in artists:
+#     print(artist.ArtistId, artist.Name, sep=" | ")
+
+# Query 2 - select only the "Name" column from the "Artist" table
+artists = session.query(Artist)
+for artist in artists:
+    print(artist.Name)
+
+# Query 3 - select only "Queen " from the "Artist" tab
+# select_query = artist_table.select().where(
+#     artist_table.c.Name == "Queen")
+
+# Query 4 - select only by "ArtistId" #51 from the "Artist" table
+# select_query = artist_table.select().where(artist_table.c.ArtistId == 51)
+
+# Query 5 - select only the albums with "ArtistId" #51 on the "Album" table
+# select_query = album_table.select().where(album_table.c.ArtistId == 51)
+
+# Query 6 - select all tracks where the composer is "Queen" from the
+# "Track" table
